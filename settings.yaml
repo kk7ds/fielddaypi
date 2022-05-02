@@ -1,0 +1,64 @@
+# This is the name of your system, for things like the WiFi SSID
+system_name: "Field Day"
+
+
+#
+# WiFi Access Point settings
+#
+# The SSID for the WAP (defaults to the name set above)
+# ssid: "{{ name }}"
+
+# The WPA2 key to use for the network
+wpakey: iamnotsecure
+
+
+#
+# GPS Configuration
+#
+# The serial port name where the GPS is connected. ttyAMA0 is the default
+# integrated pi serial port.
+# serialport: ttyAMA0
+
+# The baud rate the GPS runs at. This will be 4800 baud for many fully-NMEA
+# compliant devices, but the Neo6M defaults to 9600.
+# serialbaud: 9600
+
+
+#
+# Shared data volume configuration
+#
+
+# The device to use for shared data storage. Leave blank to disable. Examples:
+#  /dev/mmcblk0p3 - Another partition on the SD card
+#  LABEL=data - A labeled filesystem, potentially a USB stick
+# data_vol:
+
+# Where we mount the data volume
+# data_mount: /data
+
+# A directory on the data volume that will be world-writable
+# public_dir: /data/public
+
+# The SMB workgroup name (defaults to the name set above)
+# workgroup: "{{ name }}"
+
+
+#
+# Local network configuration
+#
+
+# The wireless device we will use to create a WAP on. wlan0 should be the
+# integrated wifi adapter.
+# wlanif: wlan0
+
+# The device name we will use for the WAP
+# wapif: uap0
+
+# The local subnet for the WAP
+# localnet: 192.168.5.0
+
+# If we have internet, we will forward DNS queries to this host
+# dnsforwarder: 8.8.8.8
+
+# The system hostname (default is generated from the name set above)
+# hostname: fieldday

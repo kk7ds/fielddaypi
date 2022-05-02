@@ -1,0 +1,29 @@
+- hosts: fieldday
+  become: yes
+  become_method: sudo
+  roles:
+    - fielddaypi
+  tags:
+    general
+- hosts: fieldday
+  become: yes
+  become_method: sudo
+  roles:
+    - wap
+  tags:
+    - wap
+- hosts: fieldday
+  become: yes
+  become_method: sudo
+  roles:
+    - gpsclock
+  tags:
+    - gps
+- hosts: fieldday
+  become: yes
+  become_method: sudo
+  roles:
+    - fileserver
+    - wsdd
+  tags:
+    - fileserver

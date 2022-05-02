@@ -1,0 +1,2 @@
+serialport: ttyAMA0
+serialbaud: 9600

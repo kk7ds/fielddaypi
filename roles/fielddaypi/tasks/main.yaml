@@ -1,0 +1,38 @@
+
+- name: Disable graphical boot
+  file:
+    src: /lib/systemd/system/multi-user.target
+    dest: /etc/systemd/system/default.target
+    state: link
+
+- name: Install rough time sync-er
+  copy:
+    src: timeinit.py
+    dest: /usr/local/bin/timeinit.py
+    mode: 0555
+
+- name: Install mini dashboard
+  copy:
+    src: infosrv.py
+    dest: /usr/local/bin/infosrv.py
+    mode: 0555
+
+- name: Install mini dashboard service
+  template:
+    src: infosrv.service
+    dest: /etc/systemd/system/infosrv.service
+
+- name: Enable mini dashboard service
+  ansible.builtin.systemd:
+    name: infosrv.service
+    enabled: true
+    masked: false
+
+- name: Set hostname
+  file:
+    path: /etc/hostname
+    content: "{{ hostname }}"
+
+- name: Set hostname fact
+  set_fact:
+    hostname: "{{ hostname }}"

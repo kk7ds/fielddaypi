@@ -1,0 +1,11 @@
+wlanif: wlan0
+wapif: uap0
+localnet: 192.168.5.0
+dnsforwarder: 8.8.8.8
+ssid: "{{ system_name }}"
+wpakey: iamnotsecure
+localsubnet: "{{ localnet | regex_replace('\\.0$', '') }}"
+dhcprangestart: "{{ localsubnet }}.10"
+dhcprangeend: "{{ localsubnet }}.250"
+localip: "{{ localsubnet }}.1"
+

@@ -1,0 +1,4 @@
+data_vol:
+data_mount: /data
+public_dir: /data/public
+workgroup: "{{ system_name }}"

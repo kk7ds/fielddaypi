@@ -1,0 +1,21 @@
+- name: Install WSDD repo key
+  ansible.builtin.apt_key:
+    url: https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
+    state: present
+
+- name: Install WSDD repo
+  ansible.builtin.apt_repository:
+    repo: deb https://pkg.ltec.ch/public/ buster main
+    state: present
+
+- name: Install WSDD
+  ansible.builtin.apt:
+    name: wsdd
+    state: present
+
+- name: Enable WSDD
+  ansible.builtin.systemd:
+    name: wsdd
+    enabled: yes
+    masked: no
+    state: started

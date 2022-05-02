@@ -1,0 +1,37 @@
+- name: Get data volume filesystem
+  shell: |
+    vol="{{ data_vol }}"
+    if echo $vol | grep -q LABEL; then
+        vol=$(blkid -L $(echo $vol | cut -d = -f 2))
+    elif echo $vol | grep -q UUID; then
+        vol=$(blkid -U $(echo $vol | cut -d = -f 2))
+    fi
+    eval `blkid "$vol" -o export`
+    echo $TYPE
+  register: data_vol_fstype
+
+- name: Install Samba
+  apt:
+    pkg: samba
+  when: data_vol != ""
+
+- name: Configure data volume mount
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ data_vol }} {{ data_mount }} {{ data_vol_fstype.stdout | default('vfat') }} defaults,noatime 0 1"
+  when: data_vol != ""
+
+- name: Create shared directory
+  file:
+    path: "{{ data_mount }}"
+    owner: root
+    group: root
+    mode: 0777
+    state: directory
+  when: data_vol != ""
+
+- name: Configure Samba
+  template:
+    src: smb.conf
+    dest: /etc/samba/smb.conf
+  when: data_vol != ""

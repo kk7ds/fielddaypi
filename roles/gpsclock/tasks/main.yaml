@@ -1,0 +1,103 @@
+- name: Install packages
+  apt:
+    pkg:
+      - gpsd
+      - gpsd-clients
+      - python3-gps
+      - chrony
+      - pps-tools
+      - ntpdate
+
+- name: Configure chrony
+  tags:
+    - chrony
+  template:
+    dest: /etc/chrony/conf.d/fieldday.conf
+    src: chrony.conf
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Disable serial getty
+  ansible.builtin.systemd:
+    name: serial-getty@{{ serialport }}
+    masked: true
+
+- name: Disable bluetooth
+  ansible.builtin.lineinfile:
+    path: /boot/config.txt
+    line: dtoverlay=disable-bt
+    insertafter: '^\[all\]'
+
+- name: Configure gpsd for serial
+  lineinfile:
+    path: /etc/default/gpsd
+    line: DEVICES="/dev/{{ serialport }}"
+    regexp: '^DEVICES='
+
+- name: Configure gpsd for always-on
+  lineinfile:
+    path: /etc/default/gpsd
+    line: GPSD_OPTIONS="-n"
+    regexp: '^GPSD_OPTIONS'
+
+- name: Enable gpsd
+  ansible.builtin.systemd:
+    name: gpsd
+    masked: no
+    enabled: yes
+
+- name: Create gpsd override directory
+  file:
+    path: /etc/systemd/system/gpsd.service.d
+    state: directory
+    owner: root
+    group: root
+
+- name: Set baud before gpsd start
+  template:
+    src: gpsd.service
+    dest: /etc/systemd/system/gpsd.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Create chronyd override directory
+  file:
+    path: /etc/systemd/system/chronyd.service.d
+    state: directory
+    owner: root
+    group: root
+
+- name: Enable chronyd restarts
+  copy:
+    src: chrony-override.conf
+    dest: /etc/systemd/system/chronyd.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Enable PPS via GPIO
+  lineinfile:
+    path: /boot/config.txt
+    line: dtoverlay=pps-gpio,gpiopin=18
+    insertafter: '^\[all\]'
+
+- name: Enable UART
+  lineinfile:
+    path: /boot/config.txt
+    line: enable_uart=1
+    insertafter: '^\[all\]'
+
+- name: Set UART speed
+  lineinfile:
+    path: /boot/config.txt
+    line: init_uart_baud={{ serialbaud }}
+    insertafter: '^\[all\]'
+
+- name: Enable PPS module
+  lineinfile:
+    path: /etc/modules
+    line: pps-gpio
+
+

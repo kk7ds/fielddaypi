@@ -1,0 +1,2 @@
+[fieldday]
+localhost ansible_connection=local

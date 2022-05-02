@@ -1,0 +1,8 @@
+interface=lo,{{ wapif }}
+no-dhcp-interface=lo,{{ wlanif }}
+bind-interfaces
+server={{ dnsforwarder }}
+domain-needed
+bogus-priv
+dhcp-range={{ dhcprangestart }},{{ dhcprangeend }},12h
+address=/.pool.ntp.org/{{ localip }}

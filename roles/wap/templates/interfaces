@@ -1,0 +1,15 @@
+auto lo
+auto {{ wapif }}
+
+iface lo inet loopback
+
+iface {{ wlanif }} inet manual
+  wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+
+iface {{ wapif }} inet static
+  address {{ localip }}
+  netmask 255.255.255.0
+  network {{ localnet }}
+  broadcast {{ localsubnet }}.255
+  pre-up /usr/sbin/iw dev {{ wlanif }} interface add {{ wapif }} type __ap
+  post-up /usr/sbin/iptables -t nat -A POSTROUTING -s {{ localnet }}/24 ! -d {{ localnet }}/24 -j MASQUERADE
